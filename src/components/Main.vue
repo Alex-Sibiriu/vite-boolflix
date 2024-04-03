@@ -18,7 +18,7 @@
 <template>
 
   <div class="container mb-5">
-    <h2>Film</h2>
+    <h2 class="fw-bold text-center">Film</h2>
     <div class="row row-cols-3">
       <Card 
         v-for="movie in store.allMovies" 
@@ -29,7 +29,7 @@
   </div>
 
   <div class="container mb-5">
-    <h2>Serie TV</h2>
+    <h2 class="fw-bold text-center">Serie TV</h2>
     <div class="row row-cols-3">
       <Card 
         v-for="serie in store.allSeries" 
