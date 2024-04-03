@@ -17,27 +17,29 @@
 
 <template>
 
-  <div class="container mb-5">
-    <h2 class="fw-bold text-center">Film</h2>
-    <div class="row row-cols-3">
-      <Card 
-        v-for="movie in store.allMovies" 
-        :key="movie.id"
-        :program="movie"
-      />
+  <main class="py-3">
+    <div class="container">
+      <h2 v-if="store.allMovies.length > 0" class="fw-bold text-center text-white fs-1">Film</h2>
+      <div class="row row-cols-3">
+        <Card 
+          v-for="movie in store.allMovies" 
+          :key="movie.id"
+          :program="movie"
+        />
+      </div>
     </div>
-  </div>
-
-  <div class="container mb-5">
-    <h2 class="fw-bold text-center">Serie TV</h2>
-    <div class="row row-cols-3">
-      <Card 
-        v-for="serie in store.allSeries" 
-        :key="serie.id"
-        :program="serie"
-      />
+  
+    <div class="container mb-5">
+      <h2 v-if="store.allSeries.length > 0" class="fw-bold text-center text-white fs-1 mt-5">Serie TV</h2>
+      <div class="row row-cols-3">
+        <Card 
+          v-for="serie in store.allSeries" 
+          :key="serie.id"
+          :program="serie"
+        />
+      </div>
     </div>
-  </div>
+  </main>
 
 </template>
 

@@ -19,12 +19,9 @@
           store.allMovies = response.data.results
           store.allMovies = store.allMovies.map(movie => {
             return {
+              ...movie,
               id: movie.id,
-              image: movie.poster_path,
               originalTitle: movie.original_title,
-              title: movie.title,
-              language: movie.original_language,
-              rating: movie.vote_average
             }
           })
           console.log(store.allMovies);
@@ -42,12 +39,9 @@
           store.allSeries = response.data.results
           store.allSeries = store.allSeries.map(serie => {
             return {
-              id: serie.id,
-              image: serie.poster_path,
+              ...serie,
               originalTitle: serie.original_name,
               title: serie.name,
-              language: serie.original_language,
-              rating: serie.vote_average
             }
           })
           console.log(store.allSeries);
@@ -64,9 +58,11 @@
 </script>
 
 <template>
-  <Header 
-    @performSearch="getMovie(), getSeries()"/>>
-  <Main />
+  <body class="bg-secondary">
+    <Header 
+      @performSearch="getMovie(), getSeries()"/>>
+    <Main />
+  </body>
 </template>
 
 <style lang="scss" scoped>
