@@ -6,7 +6,7 @@ export const store = reactive({
   apiParams: {
     api_key: '0585ec1cc8079d0abe869737c38b08bc',
     language: 'it-IT',
-    query: 'matrix',
+    query: '',
   },
 
   allMovies: [],
