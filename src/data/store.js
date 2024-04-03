@@ -10,5 +10,7 @@ export const store = reactive({
   },
 
   allMovies: [],
-  allSeries: []
+  allSeries: [],
+
+  allFlags: [],
 });
