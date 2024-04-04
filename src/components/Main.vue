@@ -1,10 +1,12 @@
 <script>
   import {store} from '../data/store.js';
-  import Card from './partials/Card.vue'
+  import PopShow from './partials/PopShow.vue';
+  import Card from './partials/Card.vue';
 
   export default {
     components : {
-      Card
+      PopShow,
+      Card,
     },
 
     data() {
@@ -17,8 +19,13 @@
 
 <template>
 
-  <main class="py-3">
-    <div class="container">
+  <main class="bg-dark">
+
+    <PopShow 
+      v-if="!store.isSearching"
+    />
+
+    <div v-if="store.isSearching" class="container">
       <h2 v-if="store.allMovies.length > 0" class="fw-bold text-center text-white fs-1">Film</h2>
       <div class="row row-cols-3">
         <Card 
@@ -29,7 +36,7 @@
       </div>
     </div>
   
-    <div class="container mb-5">
+    <div v-if="store.isSearching" class="container mb-5">
       <h2 v-if="store.allSeries.length > 0" class="fw-bold text-center text-white fs-1 mt-5">Serie TV</h2>
       <div class="row row-cols-3">
         <Card 
