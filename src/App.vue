@@ -66,7 +66,7 @@
         
         const castParams = this.store[type].castParams;
         const secondValue = castParams[Object.keys(castParams)[1]];
-        const newApi = `https://api.themoviedb.org/3/movie/${secondValue}/credits`
+        const newApi = store.apiCast + type + '/' + secondValue + '/credits';
         
         axios.get(newApi, {
           params: store[type].castParams
@@ -91,12 +91,30 @@
           store[type].allGenres = response.data.genres
         })
       },
+
+      searchGenres(type) {
+        axios.get(store.apiSearchGenres + type, {
+          params: store.apiParams
+        })
+        .then(response => {
+          store[type].showList = response.data.results;
+          store[type].showList = store[type].showList.map(show => {
+            return {
+              ...show,
+              title: show.name ? show.name : show.title,
+              originalTitle: show.original_title ? show.original_title : show.original_name,
+              type: type
+            }
+          })
+          store.apiParams.with_genres = 0
+        })
+      },
       
       resetArrays() {
         store.movie.popularList = [];
         store.tv.popularList = [];
-        store.allMovies = [];
-        store.allSeries = [];
+        store.movie.showList = [];
+        store.tv.showList = [];
       },
 
       getPopShow() {
@@ -138,6 +156,8 @@
       @goHome="getPopShow()"
       @goMoviePop="resetArrays(), getPopular('movie')"
       @goTvPop="resetArrays(), getPopular('tv')"
+      @searchGenresTv="resetArrays(), searchGenres('tv')"
+      @searchGenresMovie="resetArrays(), searchGenres('movie')"
     />
 
     <DetailsScreen 

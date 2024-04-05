@@ -33,7 +33,16 @@
             <ul class="my-dropdown dropdown-menu dropdown-menu-dark">
               <li class="w-100"><a @click.prevent="$emit('goMoviePop')" class="dropdown-item w-100" href="#">Most Popular</a></li>
               <li class="w-100"><a class="dropdown-item w-100" href="#">Top Rated</a></li>
-              <li class="w-100"><a class="dropdown-item w-100" href="#">Genres</a></li>
+              <li class="w-100 position-relative">
+                <a class="dropdown-item w-100" href="#">Genres</a>
+                <ul class="my-genres-list p-2 list-unstyled position-absolute start-100 top-0">
+                  <li 
+                    v-for="genre in store.movie.allGenres"
+                    :key="genre.id"
+                    @click="store.apiParams.with_genres = genre.id; store.selectedGenre = genre.name; $emit('searchGenresMovie')"
+                    class="py-2 px-3">{{ genre.name }}</li>
+                </ul>
+              </li>
               <li class="w-100"><a class="dropdown-item w-100" href="#">Latest Releases</a></li>
             </ul>
           </li>
@@ -45,7 +54,16 @@
             <ul class="my-dropdown dropdown-menu dropdown-menu-dark">
               <li @click="$emit('goTvPop')" class="w-100"><a class="dropdown-item w-100" href="#">Most Popular</a></li>
               <li class="w-100"><a class="dropdown-item w-100" href="#">Top Rated</a></li>
-              <li class="w-100"><a class="dropdown-item w-100" href="#">Genres</a></li>
+              <li class="w-100 position-relative">
+                <a class="dropdown-item w-100" href="#">Genres</a>
+                <ul class="my-genres-list p-2 list-unstyled position-absolute start-100 top-0">
+                  <li 
+                    v-for="genre in store.tv.allGenres"
+                    :key="genre.id"
+                    @click="store.apiParams.with_genres = genre.id; store.selectedGenre = genre.name; $emit('searchGenresTv')"
+                    class="py-2 px-3">{{ genre.name }}</li>
+                </ul>
+              </li>
               <li class="w-100"><a class="dropdown-item w-100" href="#">Latest Releases</a></li>
             </ul>
           </li>
@@ -69,16 +87,20 @@
     li {
       cursor: pointer;
       transition: all .4s;
-      &:not(:first-child):hover {
-        background: rgb(27, 27, 27);
+    }
+    .my-genres-list {
+      column-count: 2;
+      background: #292929;
+      width: max-content;
+      li {
+        width: 100%;
+        &:hover {
+          background: #3D3D3D;
+        }
       }
     }
   }
 
-
-  .h_70 {
-    height: 70px;
-  }
   .my-dropdown {
     background: rgb(27, 27, 27);
     top: 100%;

@@ -51,7 +51,7 @@
       <div class="left-details pe-3 d-flex flex-column justify-content-between">
         <div class="titles">
           <h2 class="pb-3">Title: {{ show.title }}</h2>
-          <h3>Original Title: {{ show.originalTitle }}</h3>
+          <h4>Original Title: {{ show.originalTitle }}</h4>
 
           <img
           v-if="show.original_language === 'en' || show.original_language === 'it'"

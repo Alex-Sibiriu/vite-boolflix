@@ -24,7 +24,11 @@
     <PopShow />
 
     <div class="container">
-      <h2 v-if="store.movie.showList.length > 0" class="fw-bold text-center text-white fs-1">Film</h2>
+      <h2
+        v-if="store.movie.showList.length > 0"
+        class="fw-bold text-center text-white fs-1">Film
+        <span v-if="store.selectedGenre">: {{ store.selectedGenre }}</span>
+      </h2>
       <div class="row row-cols-6">
         <Card 
           v-for="movie in store.movie.showList" 
@@ -35,7 +39,11 @@
     </div>
   
     <div class="container mb-5">
-      <h2 v-if="store.tv.showList.length > 0" class="fw-bold text-center text-white fs-1 mt-5">Serie TV</h2>
+      <h2
+        v-if="store.tv.showList.length > 0"
+        class="fw-bold text-center text-white fs-1 mt-5">Serie TV
+        <span v-if="store.selectedGenre">: {{ store.selectedGenre }}</span>
+      </h2>
       <div class="row row-cols-6">
         <Card 
           v-for="serie in store.tv.showList" 
