@@ -19,28 +19,26 @@
 
 <template>
 
-  <main class="bg-dark">
+  <main class="bg-dark py-5">
 
-    <PopShow 
-      v-if="!store.isSearching"
-    />
+    <PopShow />
 
-    <div v-if="store.isSearching" class="container">
-      <h2 v-if="store.allMovies.length > 0" class="fw-bold text-center text-white fs-1">Film</h2>
-      <div class="row row-cols-3">
+    <div class="container">
+      <h2 v-if="store.movie.showList.length > 0" class="fw-bold text-center text-white fs-1">Film</h2>
+      <div class="row row-cols-6">
         <Card 
-          v-for="movie in store.allMovies" 
+          v-for="movie in store.movie.showList" 
           :key="movie.id"
           :program="movie"
         />
       </div>
     </div>
   
-    <div v-if="store.isSearching" class="container mb-5">
-      <h2 v-if="store.allSeries.length > 0" class="fw-bold text-center text-white fs-1 mt-5">Serie TV</h2>
-      <div class="row row-cols-3">
+    <div class="container mb-5">
+      <h2 v-if="store.tv.showList.length > 0" class="fw-bold text-center text-white fs-1 mt-5">Serie TV</h2>
+      <div class="row row-cols-6">
         <Card 
-          v-for="serie in store.allSeries" 
+          v-for="serie in store.tv.showList" 
           :key="serie.id"
           :program="serie"
         />
@@ -52,5 +50,8 @@
 
 <style lang="scss" scoped>
   
+  main {
+    min-height: calc(100vh - 70px)
+  }
 
 </style>

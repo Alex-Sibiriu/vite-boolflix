@@ -19,140 +19,111 @@
     },
     
     methods: {
-      getPopMovie() {
-        axios.get(store.apiPopMovie, {
+      getPopular(type) {
+        axios.get(store.apiPopular + type + '/popular', {
           params: store.apiParams
         })
         .then(response => {
-          store.allPopMovies = response.data.results;
-          store.allPopMovies = store.allPopMovies.map(movie => {
+          store[type].popularList = response.data.results;
+          store[type].popularList = store[type].popularList.map(show => {
             return {
-              ...movie,
-              originalTitle: movie.original_title,
-              type: 'movie'
+              ...show,
+              title: show.name ? show.name : show.title,
+              originalTitle: show.original_title ? show.original_title : show.original_name,
+              type: type
             }
           })
         })
         .catch(error => {
-          console.log('Si è verificato un errore durante la richiesta dei Film:', error);
+          console.log('Si è verificato un errore durante la richiesta del Programma:', error);
         });
       },
 
-      getPopSeries() {
-        axios.get(store.apiPopSeries, {
+      getShow(type) {
+        store[type].showList = [];
+        axios.get(store.apiUrlShow + type, {
           params: store.apiParams
         })
         .then(response => {
-          store.allPopSeries = response.data.results;
-          store.allPopSeries = store.allPopSeries.map(serie => {
+          store[type].showList = response.data.results;
+          store[type].showList = store[type].showList.map(show => {
             return {
-              ...serie,
-              originalTitle: serie.original_name,
-              title: serie.name,
-              type: 'tv'
-            }
-          })
-        })
-        .catch(error => {
-          console.log('Si è verificato un errore durante la richiesta dei Film:', error);
-        });
-      },
-
-      getPopShow() {
-        this.getPopMovie();
-        this.getPopSeries();
-      },
-
-      getMovie() {
-        store.isSearching = true;
-        axios.get(store.apiUrlMovie, {
-          params: store.apiParams
-        })
-        .then(response => {
-          store.allMovies = response.data.results;
-          store.allMovies = store.allMovies.map(movie => {
-            return {
-              ...movie,
-              originalTitle: movie.original_title,
-              type: 'movie'
+              ...show,
+              title: show.name ? show.name : show.title,
+              originalTitle: show.original_title ? show.original_title : show.original_name,
+              type: type
             }
           })
           store.apiParams.query = '';
         })
         .catch(error => {
-          console.log('Si è verificato un errore durante la richiesta dei Film:', error);
+          console.log('Si è verificato un errore durante la richiesta dello Show:', error);
         });
       },
-
-      getSeries() {
-        store.isSearching = true;
-        axios.get(store.apiUrlSeries, {
+      
+      getCast(type) {
+        store.allCast = [];
+        
+        const castParams = this.store[type].castParams;
+        const secondValue = castParams[Object.keys(castParams)[1]];
+        const newApi = `https://api.themoviedb.org/3/movie/${secondValue}/credits`
+        
+        axios.get(newApi, {
+          params: store[type].castParams
+        })
+        .then(response => {
+          for (let i = 0; i < 5; i++) {
+            if (response.data.cast[i]) {
+              store.allCast.push(response.data.cast[i])
+            }
+          }
+        })
+        .catch(error => {
+          console.log('Si è verificato un errore durante la richiesta del Cast:', error);
+        });
+      },
+      
+      getGenres(type) {
+        axios.get(store.apiGenres + type + '/list', {
           params: store.apiParams
         })
         .then(response => {
-          store.allSeries = response.data.results
-          store.allSeries = store.allSeries.map(serie => {
-            return {
-              ...serie,
-              originalTitle: serie.original_name,
-              title: serie.name,
-              type: 'tv'
-            }
-          })
+          store[type].allGenres = response.data.genres
         })
-        .catch(error => {
-          console.log('Si è verificato un errore durante la richiesta dei Film:', error);
-        });
+      },
+      
+      resetArrays() {
+        store.movie.popularList = [];
+        store.tv.popularList = [];
+        store.allMovies = [];
+        store.allSeries = [];
       },
 
-      getMovieCast() {
-        store.allCast = [];
-
-        axios.get(store.apiMovieCast.replace('{movie_id}', store.movieCastParams.movie_id), {
-          params: store.movieCastParams
-        })
-        .then(response => {
-          for (let i = 0; i < 5; i++) {
-            if (response.data.cast[i]) {
-              store.allCast.push(response.data.cast[i])
-            }
-          }
-          console.log(store.selectedShow.genre_ids);
-        })
-        .catch(error => {
-          console.log('Si è verificato un errore durante la richiesta del Cast:', error);
-        });
+      getPopShow() {
+        this.resetArrays();
+        this.getPopular('tv')
+        this.getPopular('movie')
       },
-
-      getTVCast() {
-        store.allCast = [];
-
-        axios.get(store.apiSeriesCast.replace('{series_id}', store.seriesCastParams.series_id), {
-          params: store.seriesCastParams
-        })
-        .then(response => {
-          for (let i = 0; i < 5; i++) {
-            if (response.data.cast[i]) {
-              store.allCast.push(response.data.cast[i])
-            }
-          }
-        })
-        .catch(error => {
-          console.log('Si è verificato un errore durante la richiesta del Cast:', error);
-        });
+      
+      getMovieSeries() {
+        this.resetArrays();
+        this.getShow('movie');
+        this.getShow('tv')
       },
     },
 
     mounted() {
-      this.getPopShow()
+      this.getPopShow();
+      this.getGenres('movie');
+      this.getGenres('tv');
 
       this.$watch(
         () => store.selectedShow,
         (newValue, oldValue) => {
           if (newValue.type == 'movie') {
-            this.getMovieCast();
+            this.getCast('movie')
           } else {
-            this.getTVCast()
+            this.getCast('tv')
           }
         }
       );
@@ -163,7 +134,10 @@
 <template>
 
     <Header 
-      @performSearch="getMovie(), getSeries()"
+      @performSearch="getMovieSeries()"
+      @goHome="getPopShow()"
+      @goMoviePop="resetArrays(), getPopular('movie')"
+      @goTvPop="resetArrays(), getPopular('tv')"
     />
 
     <DetailsScreen 
@@ -171,8 +145,8 @@
     />
 
     <Main 
-      @searchMovieCast="getMovieCast()"
-      @searchTvCast="getTVCast()"
+      @searchMovieCast="getCast('movie')"
+      @searchTvCast="getCast('tv')"
     />
 
 </template>

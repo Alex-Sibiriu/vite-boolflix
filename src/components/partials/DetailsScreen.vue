@@ -22,6 +22,21 @@
       gradientStacco() {
         return store.selectedShow.vote_average * 10;
       },
+
+      allGenres() {
+        const genresArray = store.selectedShow.type === 'movie' ? store.movie.allGenres : store.tv.allGenres
+        const allGenres = [];
+        let j = 0;
+
+        for (let i = 0; i < genresArray.length; i++) {
+          if (genresArray[i].id === store.selectedShow.genre_ids[j]) {
+            allGenres.push(genresArray[i].name)
+            j++
+          }
+        }
+
+        return allGenres.join(', ')
+      }
     }
   }
 </script>
@@ -44,6 +59,7 @@
           :src="getImagePath(`../../assets/img/${show.original_language}.png`)"
           :alt="show.original_language">
           <p v-else class="fs-6 pt-2"> Language: {{ show.original_language }}</p>
+          <p v-if="allGenres">Genres: {{ allGenres }}</p>
 
           <div class="star-box text-warning" :style="{ background: 'linear-gradient(to right, gold '+ gradientStacco +'%, transparent '+ gradientStacco +'%)' }">
             <i class="fa-regular fa-star"></i>
@@ -55,8 +71,8 @@
           <p class="pt-5">{{ show.overview }}</p>
         </div>
 
-        <div class="mt-4">
-          <h4 class="pb-3">Cast</h4>
+        <div v-if="store.allCast.length > 0" class="mt-4">
+          <h4  class="pb-3">Cast</h4>
           <div class="d-flex">
             <span
               v-for="actor in store.allCast"
@@ -75,8 +91,8 @@
         
       </div>
       
-      <div class="right-details d-flex justify-content-end">
-        <img v-if="show.poster_path" class="mb-3" :src="`https://image.tmdb.org/t/p/w342/${show.poster_path}`">
+      <div class="right-details">
+        <img v-if="show.poster_path" class="mb-3 ms-3" :src="`https://image.tmdb.org/t/p/w342/${show.poster_path}`">
       </div>
 
     </div>
@@ -119,6 +135,9 @@
     }
     .right-details {
       width: 30%;
+      img {
+        max-width: 100%;
+      }
     }
   }
 

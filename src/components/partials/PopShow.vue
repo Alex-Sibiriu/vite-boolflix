@@ -18,10 +18,10 @@
 <template>
 
     <div class="container">
-      <h2 v-if="store.allPopMovies.length > 0" class="fw-bold text-center text-white fs-1">Film Popolari</h2>
-      <div class="row row-cols-3">
+      <h2 v-if="store.movie.popularList.length > 0" class="fw-bold text-center text-white fs-1">Film Popolari</h2>
+      <div class="row row-cols-6">
         <Card 
-          v-for="movie in store.allPopMovies" 
+          v-for="movie in store.movie.popularList" 
           :key="movie.id"
           :program="movie"
         />
@@ -29,10 +29,10 @@
     </div>
 
     <div class="container">
-      <h2 v-if="store.allPopSeries.length > 0" class="fw-bold text-center text-white fs-1 mt-5">Serie TV Popolari</h2>
-      <div class="row row-cols-3">
+      <h2 v-if="store.tv.popularList.length > 0" class="fw-bold text-center text-white fs-1 mt-5">Serie TV Popolari</h2>
+      <div class="row row-cols-6">
         <Card 
-          v-for="serie in store.allPopSeries" 
+          v-for="serie in store.tv.popularList" 
           :key="serie.id"
           :program="serie"
         />

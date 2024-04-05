@@ -37,7 +37,10 @@
 
       showDetails(show) {
         this.store.isShowDetails = true;
-        show.type === 'movie' ? store.movieCastParams.movie_id = show.id : store.seriesCastParams.series_id = show.id;
+
+        const castParams = this.store[show.type].castParams;
+        const keyNames = Object.keys(castParams);
+        castParams[keyNames[1]] = show.id;
       },
     }
   }
@@ -52,28 +55,6 @@
       <img v-if="program.poster_path" class="h-100 poster-img" :src="`https://image.tmdb.org/t/p/w342/${program.poster_path}`">
       <img v-else class="h-100 poster-img" src="../../assets/img/default-img.png" :alt="program.title">
       <h2 v-if="!program.poster_path" class="text-white position-absolute start-50 bottom-0 translate-middle-x pb-3">{{ program.title }}</h2>
-    
-      <!-- <div class="info-box position-absolute h-100 w-100 text-white p-3 d-flex flex-column justify-content-between">
-        <h2 v-if="program.originalTitle != program.title">Titolo Originale: {{ program.originalTitle }}</h2>
-        <h2>Titolo: {{ program.title }}</h2>
-
-        <img
-          v-if="program.original_language === 'en' || program.original_language === 'it'"
-          class="lang-flag mx-auto py-4 rounded-pill"
-          :src="getImagePath(`../../assets/img/${program.original_language}.png`)"
-          :alt="program.original_language">
-
-        <h3 v-else class="text-danger"> Lingua: {{ program.original_language }}</h3>
-
-        <div v-if="program.overview" class="overflow-y-auto spoiler-box flex-grow-1">
-          <p class="fw-medium">Trama: {{ program.overview }}</p>
-        </div>
-
-        <div>
-          <span>Voto: </span>
-          <span v-html="starRating(program.vote_average)" class="rating-box text-warning pt-3"></span>
-        </div>
-      </div> -->
 
     </div>
 
@@ -87,7 +68,7 @@
   cursor: pointer;
   transition: all .6s;
   &:hover {
-    scale: 1.15;
+    scale: 1.1;
     z-index: 10;
   }
   &:hover .poster-img {
