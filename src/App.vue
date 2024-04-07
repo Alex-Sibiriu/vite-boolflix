@@ -4,12 +4,14 @@
   import Header from './components/Header.vue';
   import Main from './components/Main.vue';
   import DetailsScreen from './components/partials/DetailsScreen.vue';
+  import Swiper from './components/partials/Swiper.vue'
 
   export default {
     components: {
       Header,
       Main,
       DetailsScreen,
+      Swiper,
     },
 
     data() {
@@ -30,9 +32,15 @@
               ...show,
               title: show.name ? show.name : show.title,
               originalTitle: show.original_title ? show.original_title : show.original_name,
-              type: type
+              type: type,
+              releaseDate: show.first_air_date ? show.first_air_date : show.release_date,
+              cast: [],
+              similar: []
             }
           })
+          setTimeout(() => {
+            store.jumboShow = store.movie.popularList[0]
+          }, 10);
         })
         .catch(error => {
           console.log('Si è verificato un errore durante la richiesta del Programma:', error);
@@ -40,7 +48,6 @@
       },
 
       getShow(type) {
-        store[type].showList = [];
         axios.get(store.apiUrlShow + type, {
           params: store.apiParams
         })
@@ -51,36 +58,53 @@
               ...show,
               title: show.name ? show.name : show.title,
               originalTitle: show.original_title ? show.original_title : show.original_name,
-              type: type
+              type: type,
+              releaseDate: show.first_air_date ? show.first_air_date : show.release_date,
+              cast: [],
+              similar: []
             }
           })
-          store.apiParams.query = '';
+          setTimeout(() => {
+            store.apiParams.query = '';
+          }, 10);
         })
         .catch(error => {
           console.log('Si è verificato un errore durante la richiesta dello Show:', error);
         });
       },
-      
-      getCast(type) {
-        store.allCast = [];
-        
-        const castParams = this.store[type].castParams;
-        const secondValue = castParams[Object.keys(castParams)[1]];
-        const newApi = store.apiCast + type + '/' + secondValue + '/credits';
-        
-        axios.get(newApi, {
-          params: store[type].castParams
-        })
-        .then(response => {
-          for (let i = 0; i < 5; i++) {
-            if (response.data.cast[i]) {
-              store.allCast.push(response.data.cast[i])
+
+      generalCast(show) {
+        show.cast = [];
+        if (show.type === 'movie') {
+          axios.get(store.apiCast + show.type + '/' + show.id + '/credits', {
+            params: {
+              api_key: store.api_key,
+              movie_id: show.id
             }
-          }
-        })
-        .catch(error => {
-          console.log('Si è verificato un errore durante la richiesta del Cast:', error);
-        });
+          })
+          .then(response => {
+            for (let i = 0; i < 5; i++) {
+              if (response.data.cast[i] && !show.cast.includes(response.data.cast[i])) {
+                show.cast.push(response.data.cast[i])
+              }
+            }
+          })
+        } else {
+          axios.get(store.apiCast + show.type + '/' + show.id + '/credits', {
+            params: {
+              api_key: store.api_key,
+              series_id: show.id
+            }
+          })
+          .then(response => {
+            for (let i = 0; i < 5; i++) {
+              if (response.data.cast[i] && !show.cast.includes(response.data.cast[i])) {
+                show.cast.push(response.data.cast[i])
+              }
+            }
+            console.log(show.cast);
+          })
+        }
       },
       
       getGenres(type) {
@@ -103,30 +127,131 @@
               ...show,
               title: show.name ? show.name : show.title,
               originalTitle: show.original_title ? show.original_title : show.original_name,
-              type: type
+              type: type,
+              releaseDate: show.first_air_date ? show.first_air_date : show.release_date,
+              cast: [],
+              similar: []
             }
           })
-          store.apiParams.with_genres = 0
         })
       },
-      
-      resetArrays() {
-        store.movie.popularList = [];
-        store.tv.popularList = [];
-        store.movie.showList = [];
-        store.tv.showList = [];
+
+      getAnime() {
+        axios.get(store.apiAnimation)
+        .then(response => {
+          store.tv.animeList = response.data.results;
+          store.tv.animeList = store.tv.animeList.map(show => {
+            return {
+              ...show,
+              title: show.name,
+              originalTitle: show.original_name,
+              type: 'tv',
+              releaseDate: show.first_air_date,
+              cast: [],
+              similar: []
+            }
+          })
+        })
+      },
+
+      getAction() {
+        axios.get(store.apiAction)
+        .then(response => {
+          store.tv.actionList = response.data.results;
+          store.tv.actionList = store.tv.actionList.map(show => {
+            return {
+              ...show,
+              title: show.name,
+              originalTitle: show.original_name,
+              type: 'tv',
+              releaseDate: show.first_air_date,
+              cast: [],
+              similar: []
+            }
+          })
+        })
+      },
+
+      getLangs() {
+        axios.get('https://api.themoviedb.org/3/configuration/languages?api_key=0585ec1cc8079d0abe869737c38b08bc')
+        .then(response => {
+          store.allLang = response.data
+        })
+      },
+
+      getSimilar(show) {
+        show.cast = [];
+        if (show.type === 'movie') {
+          axios.get(store.apiCast + show.type + '/' + show.id + '/similar', {
+            params: {
+              api_key: store.api_key,
+              movie_id: show.id
+            }
+          })
+          .then(response => {
+            if (show.similar.length < 1) {
+              for (let i = 0; i < 5; i++) {
+                if (response.data.results[i] && !show.similar.includes(response.data.results[i]) && response.data.results[i].backdrop_path) {
+                  show.similar.push(response.data.results[i])
+                }
+                show.similar = show.similar.map(item => {
+                  return {
+                    ...item,
+                    title: item.name ? item.name : item.title,
+                    originalTitle: item.original_title ? item.original_title : item.original_name,
+                    type: show.type,
+                    releaseDate: item.first_air_date ? item.first_air_date : item.release_date,
+                    cast: [],
+                    similar: []
+                  }
+                })
+              }
+            }
+          })
+        } else {
+          axios.get(store.apiCast + show.type + '/' + show.id + '/similar', {
+            params: {
+              api_key: store.api_key,
+              series_id: show.id
+            }
+          })
+          .then(response => {
+            if (show.similar.length < 1) {
+              for (let i = 0; i < 5; i++) {
+                if (response.data.results[i] && !show.similar.includes(response.data.results[i]) && response.data.results[i].backdrop_path) {
+                  show.similar.push(response.data.results[i])
+                }
+                show.similar = show.similar.map(item => {
+                  return {
+                    ...item,
+                    title: item.name ? item.name : item.title,
+                    originalTitle: item.original_title ? item.original_title : item.original_name,
+                    type: show.type,
+                    releaseDate: item.first_air_date ? item.first_air_date : item.release_date,
+                    cast: [],
+                    similar: []
+                  }
+                })
+              }
+            }
+          })
+        }
+      },
+
+      createHome() {
+        this.getPopShow();
+        this.getAnime();
+        this.getAction();
       },
 
       getPopShow() {
-        this.resetArrays();
         this.getPopular('tv')
         this.getPopular('movie')
       },
       
       getMovieSeries() {
-        this.resetArrays();
         this.getShow('movie');
-        this.getShow('tv')
+        this.getShow('tv');
       },
     },
 
@@ -134,15 +259,33 @@
       this.getPopShow();
       this.getGenres('movie');
       this.getGenres('tv');
+      this.getAnime();
+      this.getAction();
+      this.getLangs();
 
       this.$watch(
         () => store.selectedShow,
         (newValue, oldValue) => {
-          if (newValue.type == 'movie') {
-            this.getCast('movie')
-          } else {
-            this.getCast('tv')
-          }
+          this.generalCast(newValue);
+          this.getSimilar(newValue)
+        }
+      );
+
+      this.$watch(
+        () => store.jumboShow,
+        (newValue, oldValue) => {
+          this.generalCast(newValue)
+        }
+      );
+
+      this.$watch(
+        () => store.selectedLang,
+        (newValue, oldValue) => {
+          store.apiParams.language = store.selectedLang.iso_639_1;
+          this.createHome();
+          this.getGenres('movie');
+          this.getGenres('tv');
+          store.isHome = true
         }
       );
     }
@@ -152,22 +295,44 @@
 <template>
 
     <Header 
-      @performSearch="getMovieSeries()"
-      @goHome="getPopShow()"
-      @goMoviePop="resetArrays(), getPopular('movie')"
-      @goTvPop="resetArrays(), getPopular('tv')"
-      @searchGenresTv="resetArrays(), searchGenres('tv')"
-      @searchGenresMovie="resetArrays(), searchGenres('movie')"
+      @performSearch="getMovieSeries(), 
+                      store.isHome = false, 
+                      store.isPopMovie = false, 
+                      store.isPopTv = false, 
+                      store.selectedGenre = '',
+                      store.isWatchList = false"
+
+      @goHome="createHome(), store.isHome = true, store.isWatchList = false"
+      @goMoviePop="getPopular('movie'), store.isHome = false, store.isWatchList = false"
+      @goTvPop="getPopular('tv'), store.isHome = false, store.isWatchList = false"
+
+      @searchGenresTv="searchGenres('tv'), 
+                      store.isHome = false, 
+                      store.isPopMovie = false, 
+                      store.isPopTv = false, 
+                      store.movie.showList = [],
+                      store.isWatchList = false"
+
+      @searchGenresMovie="searchGenres('movie'), 
+                          store.isHome = false, 
+                          store.isPopMovie = false, 
+                          store.isPopTv = false, 
+                          store.tv.showList = [],
+                          store.isWatchList = false"
+      
+      @viewWatchList="store.isWatchList = true,
+                      store.isHome = false, 
+                      store.isPopMovie = false, 
+                      store.isPopTv = false, 
+                      store.selectedGenre = '',
+                      store.tv.showList = []"
     />
 
     <DetailsScreen 
       :show="store.selectedShow"
     />
 
-    <Main 
-      @searchMovieCast="getCast('movie')"
-      @searchTvCast="getCast('tv')"
-    />
+    <Main />
 
 </template>
 

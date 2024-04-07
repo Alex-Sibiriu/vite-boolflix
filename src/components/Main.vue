@@ -1,12 +1,17 @@
 <script>
   import {store} from '../data/store.js';
+
+  import HomePage from './partials/HomePage.vue';
+  import FilteredPage from './partials/FilteredPage.vue';
   import PopShow from './partials/PopShow.vue';
-  import Card from './partials/Card.vue';
+  import WatchList from './partials/WatchList.vue';
 
   export default {
     components : {
+      HomePage,
+      FilteredPage,
       PopShow,
-      Card,
+      WatchList,
     },
 
     data() {
@@ -19,39 +24,24 @@
 
 <template>
 
-  <main class="bg-dark py-5">
-
-    <PopShow />
-
-    <div class="container">
-      <h2
-        v-if="store.movie.showList.length > 0"
-        class="fw-bold text-center text-white fs-1">Film
-        <span v-if="store.selectedGenre">: {{ store.selectedGenre }}</span>
-      </h2>
-      <div class="row row-cols-6">
-        <Card 
-          v-for="movie in store.movie.showList" 
-          :key="movie.id"
-          :program="movie"
-        />
-      </div>
-    </div>
+  <main class="bg-black">
   
-    <div class="container mb-5">
-      <h2
-        v-if="store.tv.showList.length > 0"
-        class="fw-bold text-center text-white fs-1 mt-5">Serie TV
-        <span v-if="store.selectedGenre">: {{ store.selectedGenre }}</span>
-      </h2>
-      <div class="row row-cols-6">
-        <Card 
-          v-for="serie in store.tv.showList" 
-          :key="serie.id"
-          :program="serie"
-        />
-      </div>
-    </div>
+    <HomePage 
+      v-if="store.isHome"
+    />
+
+    <FilteredPage 
+      v-if="!store.isHome && !store.isPopMovie & !store.isPopTv"
+    />
+
+    <PopShow 
+      v-if="!store.isHome"
+    />
+
+    <WatchList 
+      v-if="store.isWatchList && !store.isHome && !store.isPopMovie & !store.isPopTv"
+    />
+
   </main>
 
 </template>
@@ -59,7 +49,9 @@
 <style lang="scss" scoped>
   
   main {
-    min-height: calc(100vh - 70px)
+    min-height: calc(100vh - 70px);
+    padding-bottom: 300px;
+    overflow: hidden;
   }
 
 </style>

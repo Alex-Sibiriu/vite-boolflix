@@ -3,16 +3,26 @@ import { reactive } from 'vue';
 export const store = reactive({
   apiParams: {
     api_key: '0585ec1cc8079d0abe869737c38b08bc',
-    language: 'it-IT',
+    language: 'it',
     query: '',
     with_genres: 0,
   },
 
+  selectedLang:   {
+    "iso_639_1": "it",
+    "english_name": "Italian",
+    "name": "Italiano"
+  },
+
+  api_key: '0585ec1cc8079d0abe869737c38b08bc',
   apiUrlShow: 'https://api.themoviedb.org/3/search/',
   apiGenres: 'https://api.themoviedb.org/3/genre/',
   apiPopular: 'https://api.themoviedb.org/3/',
   apiCast: 'https://api.themoviedb.org/3/',
   apiSearchGenres: 'https://api.themoviedb.org/3/discover/',
+
+  apiAnimation: 'https://api.themoviedb.org/3/discover/tv?api_key=0585ec1cc8079d0abe869737c38b08bc&language=it-IT&query=&with_genres=16',
+  apiAction: 'https://api.themoviedb.org/3/discover/tv?api_key=0585ec1cc8079d0abe869737c38b08bc&language=it-IT&query=&with_genres=10759',
 
   movie: {
     allGenres: [],
@@ -29,6 +39,8 @@ export const store = reactive({
     allGenres: [],
     showList: [],
     popularList: [],
+    animeList: [],
+    actionList: [],
 
     castParams: {
       api_key: '0585ec1cc8079d0abe869737c38b08bc',
@@ -36,9 +48,22 @@ export const store = reactive({
     },
   },
 
-  allCast: [],
-  // allFlags: [],
+  jumboShow: {},
+  
   isShowDetails: false,
+
   selectedShow: {},
   selectedGenre: '',
+
+  isHome: true,
+  isPopMovie: false,
+  isPopTv: false,
+  isWatchList: false,
+
+  allLang: [],
+
+  myWatchList: {
+    movie: [],
+    tv: []
+  }
 });

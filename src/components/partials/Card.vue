@@ -19,29 +19,6 @@
       getImagePath(imgPath) {
         return new URL(imgPath, import.meta.url).href
       },
-
-      starRating(rating) {
-        const ratingInt = Math.ceil(rating)
-        const starArray = []
-
-        for (let i = 0; i < 5; i++) {
-          if (i < ratingInt / 2 ) {
-            starArray.push('<i class="fa-solid fa-star"></i>')
-          } else {
-            starArray.push('<i class="fa-regular fa-star"></i>')
-          }
-        }
-
-        return starArray.join('')
-      },
-
-      showDetails(show) {
-        this.store.isShowDetails = true;
-
-        const castParams = this.store[show.type].castParams;
-        const keyNames = Object.keys(castParams);
-        castParams[keyNames[1]] = show.id;
-      },
     }
   }
 </script>
@@ -50,7 +27,7 @@
   <div class="col mt-3 text-center">
     
     <div
-      @click="store.isShowDetails = true; showDetails(program); store.selectedShow = program"
+      @click="store.isShowDetails = true; store.selectedShow = program"
       class="card h-100 bg-poster position-relative overflow-hidden">
       <img v-if="program.poster_path" class="h-100 poster-img" :src="`https://image.tmdb.org/t/p/w342/${program.poster_path}`">
       <img v-else class="h-100 poster-img" src="../../assets/img/default-img.png" :alt="program.title">

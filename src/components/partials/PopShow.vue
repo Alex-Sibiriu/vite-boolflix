@@ -17,8 +17,8 @@
 
 <template>
 
-    <div class="container">
-      <h2 v-if="store.movie.popularList.length > 0" class="fw-bold text-center text-white fs-1">Film Popolari</h2>
+    <div v-if="store.isPopMovie" class="container">
+      <h2 v-if="store.movie.popularList.length > 0" class="my-5 fw-bold ps-3 text-white fs-1">Popular Movies</h2>
       <div class="row row-cols-6">
         <Card 
           v-for="movie in store.movie.popularList" 
@@ -28,8 +28,8 @@
       </div>
     </div>
 
-    <div class="container">
-      <h2 v-if="store.tv.popularList.length > 0" class="fw-bold text-center text-white fs-1 mt-5">Serie TV Popolari</h2>
+    <div v-if="store.isPopTv" class="container">
+      <h2 v-if="store.tv.popularList.length > 0" class="my-5 fw-bold ps-3 text-white fs-1">Popular TV Series</h2>
       <div class="row row-cols-6">
         <Card 
           v-for="serie in store.tv.popularList" 
@@ -43,5 +43,8 @@
 
 <style lang="scss" scoped>
   
+  h2 {
+    border-left: 5px solid red;
+  }
 
 </style>
