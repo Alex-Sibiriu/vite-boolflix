@@ -35,7 +35,8 @@
               type: type,
               releaseDate: show.first_air_date ? show.first_air_date : show.release_date,
               cast: [],
-              similar: []
+              similar: [],
+              videos: []
             }
           })
           setTimeout(() => {
@@ -61,7 +62,8 @@
               type: type,
               releaseDate: show.first_air_date ? show.first_air_date : show.release_date,
               cast: [],
-              similar: []
+              similar: [],
+              videos: []
             }
           })
           setTimeout(() => {
@@ -73,13 +75,48 @@
         });
       },
 
+      getVideos(show) {
+        show.cast = [];
+        if (show.type === 'movie') {
+          axios.get(store.apiCast + show.type + '/' + show.id + '/videos', {
+            params: {
+              api_key: store.api_key,
+              movie_id: show.id,
+              language: store.apiParams.language
+            }
+          })
+          .then(response => {
+            const video = response.data.results.find(video => video.type === 'Trailer' );
+            if (show.videos.length < 1 && video) {
+              show.videos.push(video)
+              console.log(video);
+            }
+          })
+        } else {
+          axios.get(store.apiCast + show.type + '/' + show.id + '/videos', {
+            params: {
+              api_key: store.api_key,
+              series_id: show.id,
+              language: store.apiParams.language
+            }
+          })
+          .then(response => {
+            const video = response.data.results.find(video => video.type === 'Trailer' );
+            if (show.videos.length < 1 && video) {
+              show.videos.push(video)
+            }
+          })
+        }
+      },
+
       generalCast(show) {
         show.cast = [];
         if (show.type === 'movie') {
           axios.get(store.apiCast + show.type + '/' + show.id + '/credits', {
             params: {
               api_key: store.api_key,
-              movie_id: show.id
+              movie_id: show.id,
+              language: store.apiParams.language
             }
           })
           .then(response => {
@@ -102,7 +139,6 @@
                 show.cast.push(response.data.cast[i])
               }
             }
-            console.log(show.cast);
           })
         }
       },
@@ -130,7 +166,8 @@
               type: type,
               releaseDate: show.first_air_date ? show.first_air_date : show.release_date,
               cast: [],
-              similar: []
+              similar: [],
+              videos: []
             }
           })
         })
@@ -148,7 +185,8 @@
               type: 'tv',
               releaseDate: show.first_air_date,
               cast: [],
-              similar: []
+              similar: [],
+              videos: []
             }
           })
         })
@@ -166,7 +204,8 @@
               type: 'tv',
               releaseDate: show.first_air_date,
               cast: [],
-              similar: []
+              similar: [],
+              videos: []
             }
           })
         })
@@ -185,7 +224,8 @@
           axios.get(store.apiCast + show.type + '/' + show.id + '/similar', {
             params: {
               api_key: store.api_key,
-              movie_id: show.id
+              movie_id: show.id,
+              language: store.apiParams.language
             }
           })
           .then(response => {
@@ -202,7 +242,8 @@
                     type: show.type,
                     releaseDate: item.first_air_date ? item.first_air_date : item.release_date,
                     cast: [],
-                    similar: []
+                    similar: [],
+                    videos: []
                   }
                 })
               }
@@ -229,7 +270,8 @@
                     type: show.type,
                     releaseDate: item.first_air_date ? item.first_air_date : item.release_date,
                     cast: [],
-                    similar: []
+                    similar: [],
+                    videos: []
                   }
                 })
               }
@@ -267,14 +309,16 @@
         () => store.selectedShow,
         (newValue, oldValue) => {
           this.generalCast(newValue);
-          this.getSimilar(newValue)
+          this.getSimilar(newValue);
+          this.getVideos(newValue);
         }
       );
 
       this.$watch(
         () => store.jumboShow,
         (newValue, oldValue) => {
-          this.generalCast(newValue)
+          this.generalCast(newValue);
+          this.getVideos(newValue)
         }
       );
 

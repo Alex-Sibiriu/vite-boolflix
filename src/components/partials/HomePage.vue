@@ -43,6 +43,9 @@
       :showList="store.tv.actionList"
     />
 
+
+    <iframe v-if="store.jumboShow.videos" width="560" height="315" :src="`https://www.youtube.com/embed/FY5EI7Sg63g`" frameborder="0" allowfullscreen type="video/mp4"></iframe>
+
 </template>
 
 <style lang="scss" scoped>

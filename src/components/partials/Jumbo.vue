@@ -9,10 +9,7 @@
     data() {
       return {
         store,
-        countrycodedict: {
-          'United States': 'us'
-          
-        }
+        showVideo: false
       }
     },
 
@@ -26,8 +23,7 @@
       },
 
       startVideo() {
-        var video = document.getElementById('jumbo-video');
-        video.play();  
+        this.showVideo = !this.showVideo
       },
 
       toggleWatchList(show, showID) {
@@ -64,14 +60,11 @@
 
       <div class="front-bg w-100" >
 
-        <video id="jumbo-video" width="100%" height="100%" controls autoplay loop>
-          <source src="../../assets/video/videoplayback.webm" type="video/webm">
-          Il tuo browser non supporta il tag video.
-        </video>
+        <iframe v-if="show.videos" id="jumbo-video" width="100%" height="100%" :src="`https://www.youtube.com/embed/${show.videos[0].key}?controls=0&modestbranding=1&showinfo=0&showsearch=0&rel=0&autoplay=${showVideo ? 1 : 0}&loop=1&mute=1`" frameborder="0"  type="video/mp4" allow='autoplay' autoplay allowfullscreen></iframe>
 
         <div
-          @mouseenter="startVideo(true)"
-          @mouseleave="startVideo(false)"
+          @mouseenter="startVideo()"
+          @mouseleave="startVideo()"
           class="front-details position-absolute top-0 ps-5 w-100 h-100">
 
           <h2 class="pb-3 fs-1 fw-bold">{{ show.title }}</h2>

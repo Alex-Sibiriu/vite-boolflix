@@ -79,6 +79,10 @@
 
           <p class="pt-4">{{ show.overview }}</p>
 
+          <div>
+            <iframe v-if="show.videos[0]" width="560" height="315" :src="`https://www.youtube.com/embed/${show.videos[0].key}?controls=0&modestbranding=1&showinfo=0&showsearch=0&rel=0&autoplay=1&loop=1`" frameborder="0"  type="video/mp4"></iframe>
+          </div>
+
           <span @click.stop="changeJumbo(show)" class="btn btn-secondary me-1 mb-2 fs-4 mt-4">
             <span>Play </span>
             <i class="fa-regular fa-circle-play ms-2"></i>
@@ -144,7 +148,8 @@
 <style lang="scss" scoped>
 
   .wrapper {
-    height: 100vh;
+    min-height: 100vh;
+    overflow: auto;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 999;
     i {
