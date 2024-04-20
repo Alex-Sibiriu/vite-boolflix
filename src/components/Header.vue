@@ -51,7 +51,7 @@
                   <li 
                     v-for="genre in store.movie.allGenres"
                     :key="genre.id"
-                    @click="store.apiParams.with_genres = genre.id; store.selectedGenre = genre.name; $emit('searchGenresMovie')"
+                    @click="store.apiParams.with_genres = genre.id; store.selectedGenre = genre.name; $emit('searchGenresMovie'), console.log('ho cliccato il genere')"
                     class="py-2 px-3">{{ genre.name }}</li>
                 </ul>
               </li>
@@ -72,7 +72,7 @@
                   <li 
                     v-for="genre in store.tv.allGenres"
                     :key="genre.id"
-                    @click="store.apiParams.with_genres = genre.id; store.selectedGenre = genre.name, store.isPopMovie = false, store.isPopTv = false, $emit('searchGenresTv')"
+                    @click="store.apiParams.with_genres = genre.id; store.selectedGenre = genre.name, $emit('searchGenresTv')"
                     class="py-2 px-3">{{ genre.name }}</li>
                 </ul>
               </li>

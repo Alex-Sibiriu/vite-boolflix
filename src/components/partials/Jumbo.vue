@@ -60,7 +60,7 @@
 
       <div class="front-bg w-100" >
 
-        <iframe v-if="show.videos" id="jumbo-video" width="100%" height="100%" :src="`https://www.youtube.com/embed/${show.videos[0].key}?controls=0&modestbranding=1&showinfo=0&showsearch=0&rel=0&autoplay=${showVideo ? 1 : 0}&loop=1&mute=1`" frameborder="0"  type="video/mp4" allow='autoplay' autoplay allowfullscreen></iframe>
+        <!-- <iframe v-if="show.videos" id="jumbo-video" width="100%" height="100%" :src="`https://www.youtube.com/embed/${show.videos[0].key}?controls=0&modestbranding=1&showinfo=0&showsearch=0&rel=0&autoplay=${showVideo ? 1 : 0}&loop=1&mute=1`" frameborder="0"  type="video/mp4" allow='autoplay'></iframe> -->
 
         <div
           @mouseenter="startVideo()"

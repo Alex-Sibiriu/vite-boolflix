@@ -39,7 +39,7 @@
     />
 
     <WatchList 
-      v-if="store.isWatchList && !store.isHome && !store.isPopMovie & !store.isPopTv"
+      v-if="store.isWatchList"
     />
 
   </main>

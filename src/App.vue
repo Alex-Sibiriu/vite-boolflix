@@ -89,7 +89,6 @@
             const video = response.data.results.find(video => video.type === 'Trailer' );
             if (show.videos.length < 1 && video) {
               show.videos.push(video)
-              console.log(video);
             }
           })
         } else {
@@ -369,7 +368,8 @@
                       store.isPopMovie = false, 
                       store.isPopTv = false, 
                       store.selectedGenre = '',
-                      store.tv.showList = []"
+                      store.tv.showList = [],
+                      store.movie.showList = []"
     />
 
     <DetailsScreen 
