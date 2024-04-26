@@ -14,12 +14,9 @@ export const store = reactive({
     "name": "Italiano"
   },
 
+  apiUrl: 'https://api.themoviedb.org/3/',
+
   api_key: '0585ec1cc8079d0abe869737c38b08bc',
-  apiUrlShow: 'https://api.themoviedb.org/3/search/',
-  apiGenres: 'https://api.themoviedb.org/3/genre/',
-  apiPopular: 'https://api.themoviedb.org/3/',
-  apiCast: 'https://api.themoviedb.org/3/',
-  apiSearchGenres: 'https://api.themoviedb.org/3/discover/',
 
   apiAnimation: 'https://api.themoviedb.org/3/discover/tv?api_key=0585ec1cc8079d0abe869737c38b08bc&language=it-IT&query=&with_genres=16',
   apiAction: 'https://api.themoviedb.org/3/discover/tv?api_key=0585ec1cc8079d0abe869737c38b08bc&language=it-IT&query=&with_genres=10759',

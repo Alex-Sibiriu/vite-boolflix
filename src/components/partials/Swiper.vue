@@ -69,7 +69,7 @@
 </script>
 
 <template>
-  <div class="bg-black py-2">
+  <div class="py-2 w-100">
 
     <swiper
       :navigation="true"

@@ -22,7 +22,7 @@
     
     methods: {
       getPopular(type) {
-        axios.get(store.apiPopular + type + '/popular', {
+        axios.get(store.apiUrl + type + '/popular', {
           params: store.apiParams
         })
         .then(response => {
@@ -36,7 +36,8 @@
               releaseDate: show.first_air_date ? show.first_air_date : show.release_date,
               cast: [],
               similar: [],
-              videos: []
+              videos: [],
+              images: []
             }
           })
           setTimeout(() => {
@@ -49,7 +50,7 @@
       },
 
       getShow(type) {
-        axios.get(store.apiUrlShow + type, {
+        axios.get(store.apiUrl + 'search/' + type, {
           params: store.apiParams
         })
         .then(response => {
@@ -75,10 +76,39 @@
         });
       },
 
-      getVideos(show) {
-        show.cast = [];
+      getImages(show) {
         if (show.type === 'movie') {
-          axios.get(store.apiCast + show.type + '/' + show.id + '/videos', {
+          axios.get(store.apiUrl + show.type + '/' + show.id + '/images', {
+            params: {
+              api_key: store.api_key,
+              movie_id: show.id
+            }
+          })
+          .then(response => {
+            const image = response.data.backdrops.find(image => image.height === 2160);
+            if (show.images.length < 1 && image) {
+              show.images.push(image)
+            }
+          })
+        } else {
+          axios.get(store.apiUrl + show.type + '/' + show.id + '/images', {
+            params: {
+              api_key: store.api_key,
+              series_id: show.id
+            }
+          })
+          .then(response => {
+            const image = response.data.backdrops.find(image => image.height === 2160);
+            if (show.images.length < 1 && image) {
+              show.images.push(image)
+            }
+          })
+        }
+      },
+
+      getVideos(show) {
+        if (show.type === 'movie') {
+          axios.get(store.apiUrl + show.type + '/' + show.id + '/videos', {
             params: {
               api_key: store.api_key,
               movie_id: show.id,
@@ -86,13 +116,28 @@
             }
           })
           .then(response => {
-            const video = response.data.results.find(video => video.type === 'Trailer' );
-            if (show.videos.length < 1 && video) {
-              show.videos.push(video)
+            if (response.data.results.length === 0) {
+              axios.get(store.apiUrl + show.type + '/' + show.id + '/videos', {
+                params: {
+                  api_key: store.api_key,
+                  movie_id: show.id
+                }
+              })
+              .then(result => {
+                const video = result.data.results.find(video => video.type === 'Trailer' );
+                if (show.videos.length < 1 && video) {
+                  show.videos.push(video)
+                }
+              })
+            } else {
+              const video = response.data.results.find(video => video.type === 'Trailer' );
+              if (show.videos.length < 1 && video) {
+                show.videos.push(video)
+              }
             }
           })
         } else {
-          axios.get(store.apiCast + show.type + '/' + show.id + '/videos', {
+          axios.get(store.apiUrl + show.type + '/' + show.id + '/videos', {
             params: {
               api_key: store.api_key,
               series_id: show.id,
@@ -100,9 +145,24 @@
             }
           })
           .then(response => {
-            const video = response.data.results.find(video => video.type === 'Trailer' );
-            if (show.videos.length < 1 && video) {
-              show.videos.push(video)
+            if (response.data.results.length === 0) {
+              axios.get(store.apiUrl + show.type + '/' + show.id + '/videos', {
+                params: {
+                  api_key: store.api_key,
+                  movie_id: show.id
+                }
+              })
+              .then(result => {
+                const video = result.data.results.find(video => video.type === 'Trailer' );
+                if (show.videos.length < 1 && video) {
+                  show.videos.push(video)
+                }
+              })
+            } else {
+              const video = response.data.results.find(video => video.type === 'Trailer' );
+              if (show.videos.length < 1 && video) {
+                show.videos.push(video)
+              }
             }
           })
         }
@@ -111,7 +171,7 @@
       generalCast(show) {
         show.cast = [];
         if (show.type === 'movie') {
-          axios.get(store.apiCast + show.type + '/' + show.id + '/credits', {
+          axios.get(store.apiUrl + show.type + '/' + show.id + '/credits', {
             params: {
               api_key: store.api_key,
               movie_id: show.id,
@@ -126,7 +186,7 @@
             }
           })
         } else {
-          axios.get(store.apiCast + show.type + '/' + show.id + '/credits', {
+          axios.get(store.apiUrl + show.type + '/' + show.id + '/credits', {
             params: {
               api_key: store.api_key,
               series_id: show.id
@@ -143,7 +203,7 @@
       },
       
       getGenres(type) {
-        axios.get(store.apiGenres + type + '/list', {
+        axios.get(store.apiUrl + 'genre/' + type + '/list', {
           params: store.apiParams
         })
         .then(response => {
@@ -152,7 +212,7 @@
       },
 
       searchGenres(type) {
-        axios.get(store.apiSearchGenres + type, {
+        axios.get(store.apiUrl + 'discover/' + type, {
           params: store.apiParams
         })
         .then(response => {
@@ -220,7 +280,7 @@
       getSimilar(show) {
         show.cast = [];
         if (show.type === 'movie') {
-          axios.get(store.apiCast + show.type + '/' + show.id + '/similar', {
+          axios.get(store.apiUrl + show.type + '/' + show.id + '/similar', {
             params: {
               api_key: store.api_key,
               movie_id: show.id,
@@ -249,7 +309,7 @@
             }
           })
         } else {
-          axios.get(store.apiCast + show.type + '/' + show.id + '/similar', {
+          axios.get(store.apiUrl + show.type + '/' + show.id + '/similar', {
             params: {
               api_key: store.api_key,
               series_id: show.id
@@ -297,11 +357,9 @@
     },
 
     mounted() {
-      this.getPopShow();
+      this.createHome();
       this.getGenres('movie');
       this.getGenres('tv');
-      this.getAnime();
-      this.getAction();
       this.getLangs();
 
       this.$watch(
@@ -317,7 +375,8 @@
         () => store.jumboShow,
         (newValue, oldValue) => {
           this.generalCast(newValue);
-          this.getVideos(newValue)
+          this.getVideos(newValue);
+          this.getImages(newValue)
         }
       );
 

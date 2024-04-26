@@ -28,23 +28,22 @@
       :show="store.jumboShow"
     />
 
-    <h3 v-if="store.movie.popularList.length > 0" class="ms-5 ps-3 text-white mt-5 pb-1 fw-bold">Popular Movie</h3>
-    <Swiper 
-      :showList="store.movie.popularList"
-    />
-    
-    <h3 v-if="store.tv.animeList.length > 0" class="ms-5 ps-3 text-white mt-5 pb-1 fw-bold">Animation</h3>
-    <Swiper 
-      :showList="store.tv.animeList"
-    />
-
-    <h3 v-if="store.tv.actionList.length > 0" class="ms-5 ps-3 text-white mt-5 pb-1 fw-bold">Action Adventure</h3>
-    <Swiper 
-      :showList="store.tv.actionList"
-    />
-
-
-    <iframe v-if="store.jumboShow.videos" width="560" height="315" :src="`https://www.youtube.com/embed/FY5EI7Sg63g`" frameborder="0" allowfullscreen type="video/mp4"></iframe>
+    <div class="swiper-wrapper position-relative d-flex flex-column">
+      <h3 v-if="store.movie.popularList.length > 0" class="ms-5 ps-3 text-white mt-5 pb-1 fw-bold">Popular Movie</h3>
+      <Swiper 
+        :showList="store.movie.popularList"
+      />
+      
+      <h3 v-if="store.tv.animeList.length > 0" class="ms-5 ps-3 text-white mt-5 pb-1 fw-bold">Animation</h3>
+      <Swiper 
+        :showList="store.tv.animeList"
+      />
+  
+      <h3 v-if="store.tv.actionList.length > 0" class="ms-5 ps-3 text-white mt-5 pb-1 fw-bold">Action Adventure</h3>
+      <Swiper 
+        :showList="store.tv.actionList"
+      />
+    </div>
 
 </template>
 
@@ -52,6 +51,11 @@
 
   h3 {
     border-left: 5px solid red;
+  }
+
+  .swiper-wrapper {
+    top: -240px;
+    height: fit-content;
   }
 
 </style>

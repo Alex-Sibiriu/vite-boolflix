@@ -14,14 +14,6 @@
     },
 
     methods: {
-      getImagePath(imgPath) {
-        return new URL(imgPath, import.meta.url).href
-      },
-
-      getImagePath(imgPath) {
-        return new URL(imgPath, import.meta.url).href
-      },
-
       startVideo() {
         this.showVideo = !this.showVideo
       },
@@ -58,14 +50,18 @@
 
     <div class="my-info-box position-relative text-white bg-black">
 
-      <div class="front-bg w-100" >
+      <div class="front-bg w-100">
 
-        <!-- <iframe v-if="show.videos" id="jumbo-video" width="100%" height="100%" :src="`https://www.youtube.com/embed/${show.videos[0].key}?controls=0&modestbranding=1&showinfo=0&showsearch=0&rel=0&autoplay=${showVideo ? 1 : 0}&loop=1&mute=1`" frameborder="0"  type="video/mp4" allow='autoplay'></iframe> -->
+        <img v-if="show.images && show.images.length > 0 && !showVideo" class="w-100 h-100" :src="`https://image.tmdb.org/t/p/original/${show.images[0].file_path}`">
+
+        <div v-else-if="show.videos && show.videos.length > 0" class="video-box text-end position-relative">
+          <iframe id="jumbo-video" width="1920" height="1080" :src="`https://www.youtube.com/embed/${show.videos[0].key}?controls=0&modestbranding=1&showinfo=0&showsearch=0&rel=0&autoplay=${showVideo ? 1 : 0}&loop=1`" frameborder="0"  type="video/mp4" allow='autoplay'></iframe>
+        </div>
 
         <div
           @mouseenter="startVideo()"
           @mouseleave="startVideo()"
-          class="front-details position-absolute top-0 ps-5 w-100 h-100">
+          class="front-details position-absolute top-0 ps-5 w-100" :class="{'shadow-x' : showVideo}">
 
           <h2 class="pb-3 fs-1 fw-bold">{{ show.title }}</h2>
           
@@ -83,7 +79,6 @@
           <p v-if="allGenres">Genres: {{ allGenres }}</p>
 
           <p class="pt-3 fs-5">{{ show.overview }}</p>
-
 
           <div class="mt-4 cast-box mt-auto">
             <h5 class="pt-3">Cast:</h5>
@@ -142,18 +137,29 @@
     display: none !important;
   }
 
-  #jumbo-video {
-    object-fit: cover;
+  .video-box {
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 170px;
+      width: 100%;
+      background: linear-gradient(to bottom, black 90%, transparent);
+    }
+    #jumbo-video {
+      object-fit: cover;
+    }
   }
 
   .my-info-box {
-    height: calc(100vh - 70px);
+    height: 1080px;
   }
     i {
       cursor: pointer;
     }
     .front-bg {
-      height: 100%;
+      height: 1080px;
       background-size: contain;
       background-position-x: right;
       background-repeat: no-repeat;
@@ -161,11 +167,11 @@
                     10px 0px 20px inset black;
       z-index: 999;
       .front-details {
-        background: linear-gradient(to right, rgba(0, 0, 0, 0.7) 30%, transparent);
+        background: linear-gradient(to right, rgb(0, 0, 0) 25%, transparent 50%);
         padding-right: 70%;
         padding-top: 6%;
         line-height: 2rem;
-        height: 100%;
+        height: 1080px;
       }
       .star-box {
         mask-image: url('../../assets/img/star-solid.svg');
