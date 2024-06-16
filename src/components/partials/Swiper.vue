@@ -6,10 +6,9 @@
 
   import 'swiper/css';
 
-  import 'swiper/css/pagination';
   import 'swiper/css/navigation';
 
-  import {Autoplay, Navigation, Pagination } from 'swiper/modules';
+  import {Autoplay, Navigation } from 'swiper/modules';
 
   export default {
     components: {
@@ -75,10 +74,8 @@
       :navigation="true"
       :slidesPerGroup="5"
       :slidesPerGroupSkip="1"
+      :grabCursor="true"
       :loop="true"
-      :pagination="{
-        clickable: false,
-      }"
      
       :initialSlide="6"
       :slidesPerView="6"
@@ -192,9 +189,6 @@
     top: 5px;
     left: 7px;
   }
-  // .default-backdrop {
-  //   height:;
-  // }
 }
 
 .info-box {

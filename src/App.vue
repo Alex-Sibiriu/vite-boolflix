@@ -16,7 +16,7 @@
 
     data() {
       return {
-        store
+        store,
       }
     },
     
@@ -271,9 +271,13 @@
       },
 
       getLangs() {
+        store.langLoading = true;
         axios.get('https://api.themoviedb.org/3/configuration/languages?api_key=0585ec1cc8079d0abe869737c38b08bc')
         .then(response => {
-          store.allLang = response.data
+          store.allLang = response.data;
+        })
+        .catch(error => {
+          console.error("Errore nel caricamento delle lingue:", error);
         })
       },
 
@@ -357,10 +361,10 @@
     },
 
     mounted() {
+      this.getLangs();
       this.createHome();
       this.getGenres('movie');
       this.getGenres('tv');
-      this.getLangs();
 
       this.$watch(
         () => store.selectedShow,

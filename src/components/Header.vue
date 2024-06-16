@@ -11,16 +11,6 @@
       getImagePath(imgPath) {
         return new URL(imgPath, import.meta.url).href
       },
-
-      getFlafPath(langCode) {
-        return `https://www.unknown.nu/flags/images/${langCode}-100`;
-      },
-
-      langFlagExists(langCode) {
-        const img = new Image();
-        img.src = this.getFlafPath(langCode);
-        return img.complete;
-      }
     },
   }
 </script>
@@ -100,11 +90,12 @@
                 :key="lang.iso_639_1"
                 @click="store.selectedLang = lang">
                 <a
-                  v-if="langFlagExists(lang.iso_639_1)"
+                  v-if="lang.english_name != 'No Language'"
                   class="dropdown-item w-100"
                   href="#">
                   <img
                     :src="`https://www.unknown.nu/flags/images/${lang.iso_639_1}-100`"
+                    onerror="this.src=`https://upload.wikimedia.org/wikipedia/commons/7/7e/White_flag_with_question_mark.png`"
                     :alt="lang.iso_639_1"
                     class="lang-img"> {{ lang.english_name }}</a>
               </li>

@@ -78,7 +78,9 @@
           </div>
           <p v-if="allGenres">Genres: {{ allGenres }}</p>
 
-          <p class="pt-3 fs-5">{{ show.overview }}</p>
+          <div class="pt-3 fs-5 show-overview">
+            <p class="p-0">{{ show.overview }}</p>
+          </div>
 
           <div class="mt-4 cast-box mt-auto">
             <h5 class="pt-3">Cast:</h5>
@@ -190,6 +192,12 @@
       img {
         height: 100%;
       }
+    }
+
+    .show-overview {
+      height: 170px;
+      overflow-y: auto;
+      scrollbar-width: none;
     }
   
 
