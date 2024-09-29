@@ -271,10 +271,12 @@
       },
 
       getLangs() {
+        const filteredLanguages = ['portuguese', 'italian', 'spanish',  'polish', 'german', 'russian', 'korean', 'japanese', 'ukrainian', 'french', 'thai', 'english']
+
         store.langLoading = true;
         axios.get('https://api.themoviedb.org/3/configuration/languages?api_key=0585ec1cc8079d0abe869737c38b08bc')
         .then(response => {
-          store.allLang = response.data;
+          store.allLang = response.data.filter((l)=> filteredLanguages.includes(l.english_name.toLowerCase()));
         })
         .catch(error => {
           console.error("Errore nel caricamento delle lingue:", error);
